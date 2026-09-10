@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenis Pelanggaran — SMK TI Bali Global Denpasar</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Poppins', sans-serif;
+            --color-primary: #0F172A;
+            --color-accent: #C4F168;
+            --color-surface: #ffffff;
+            --color-bg: #F8FAFC;
+        }
+
+        .premium-card {
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-entry {
+            animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen font-sans relative overflow-x-hidden">
+    <!-- Background Blobs -->
+    <div
+        class="fixed -top-[10%] -left-[5%] w-[500px] h-[500px] bg-[#C4F168] rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10">
+    </div>
+    <div class="fixed -bottom-[10%] -right-[5%] w-[400px] h-[400px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10"
+        style="animation-delay: 2s;"></div>
+
+    <!-- Layout wrapper — sidebar + topbar di-generate oleh renderLayout() -->
+    <div id="app"></div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-entry">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-3 mb-1">
+                    <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                        <i data-lucide="clipboard-list" class="w-6 h-6 text-accent"></i>
+                    </div>
+                    <h1 class="text-2xl lg:text-3xl font-extrabold text-primary tracking-tight">Jenis Pelanggaran</h1>
+                </div>
+                <p class="text-slate-500 text-sm font-medium">Kelola kategori dan bobot poin pelanggaran siswa</p>
+            </div>
+
+            <button onclick="openModal()"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 cursor-pointer group">
+                <i data-lucide="plus-circle" class="w-5 h-5 group-hover:rotate-90 transition-transform"></i>
+                Tambah Jenis
+            </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden premium-card">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 bg-slate-50/50">
+                            <th
+                                class="text-left px-6 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px]">
+                                Kategori</th>
+                            <th
+                                class="text-left px-6 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px]">
+                                Nama Jenis</th>
+                            <th
+                                class="text-left px-4 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px] hidden md:table-cell">
+                                Deskripsi</th>
+                            <th
+                                class="text-center px-6 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px]">
+                                Poin</th>
+                            <th
+                                class="text-center px-6 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px]">
+                                Dipakai</th>
+                            <th
+                                class="text-right px-6 py-4 font-bold text-slate-500 uppercase tracking-widest text-[10px]">
+                                Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jenis-tbody" class="divide-y divide-slate-50">
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center gap-2 text-slate-400">
+                                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+                                    <p class="font-medium">Memuat data...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div id="modal-confirm-jenis"
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-primary/20 backdrop-blur-md p-4">
+        <div data-box
+            class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm scale-95 opacity-0 transition-all duration-300">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-triangle" class="w-8 h-8 text-red-400"></i>
+                </div>
+                <h3 id="confirm-jenis-title" class="text-lg font-black text-primary mb-2">Konfirmasi</h3>
+                <p id="confirm-jenis-msg" class="text-sm text-slate-500"></p>
+            </div>
+            <div class="flex gap-4 p-6 pt-0">
+                <button id="confirm-jenis-cancel"
+                    class="flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all">Batal</button>
+                <button id="confirm-jenis-ok"
+                    class="flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-red-500 text-white hover:bg-red-600 transition-all">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-primary/20 backdrop-blur-md p-4 transition-all duration-300">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md border border-slate-100 scale-95 opacity-0 transition-all duration-300"
+            id="modal-container">
+            <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+                <div>
+                    <h2 id="modal-title" class="text-xl font-extrabold text-primary tracking-tight">Tambah Jenis</h2>
+                    <p class="text-xs text-slate-500 mt-1">Lengkapi informasi kategori pelanggaran</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                </button>
+            </div>
+
+            <form id="jenis-form" class="p-8 space-y-5">
+                <input type="hidden" id="edit-id">
+
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-bold text-slate-700">Kategori</label>
+                    <select id="f-kategori"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all bg-slate-50/50">
+                        <option value="">— Pilih Kategori —</option>
+                        <option value="SS">SS - Seragam Sekolah</option>
+                        <option value="KS">KS - Kehadiran Di Sekolah</option>
+                        <option value="PBM">PBM - Proses Belajar Mengajar</option>
+                        <option value="PNN">PNN - Perilaku Negatif</option>
+                        <option value="PB">PB - Perundungan/Bullying</option>
+                        <option value="KB">KB - Kebersihan</option>
+                        <option value="UB">UB - Upacara Bendera</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-bold text-slate-700">Nama Jenis Pelanggaran <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" id="f-nama" required
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all bg-slate-50/50"
+                        placeholder="Contoh: Terlambat masuk kelas">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-bold text-slate-700">Deskripsi Singkat</label>
+                    <textarea id="f-deskripsi" rows="2"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all bg-slate-50/50 resize-none"
+                        placeholder="Berikan penjelasan singkat jika perlu..."></textarea>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-bold text-slate-700">Bobot Poin <span
+                            class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="shield-alert" class="w-4 h-4 text-slate-400"></i>
+                        </div>
+                        <input type="number" id="f-poin" required min="0"
+                            class="w-full h-12 pl-12 pr-4 rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all bg-slate-50/50"
+                            placeholder="0">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal()"
+                        class="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all cursor-pointer">Batal</button>
+                    <button type="submit"
+                        class="px-8 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 cursor-pointer">Simpan
+                        Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        (async () => {
+            const user = await requireLogin();
+            if (!user || user.role !== 'admin') { window.location.href = '/dashboard'; return; }
+            renderLayout(user);
+            loadJenis();
+            lucide.createIcons();
+        })();
+
+        async function loadJenis() {
+            const res = await api('/api/jenis');
+            const tbody = document.getElementById('jenis-tbody');
+            if (!res.ok) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500 font-medium">${res.error}</td></tr>`;
+                return;
+            }
+
+            if (res.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-20 text-center text-slate-400"><i data-lucide="inbox" class="w-12 h-12 mx-auto mb-2 opacity-20"></i><p class="font-medium">Belum ada data jenis pelanggaran.</p></td></tr>';
+                lucide.createIcons();
+                return;
+            }
+
+            tbody.innerHTML = res.data.map(j => `
+            <tr class="group hover:bg-slate-50/80 transition-all duration-300">
+                <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-black bg-slate-100 text-slate-600 border border-slate-200 group-hover:bg-accent group-hover:text-primary group-hover:border-accent transition-all">
+                        ${escapeHtml(j.kode_kategori || '—')}
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="font-bold text-primary">${escapeHtml(j.nama_jenis)}</div>
+                    <div class="text-[11px] text-slate-400 md:hidden mt-0.5">${escapeHtml(j.kode_kategori || '—')}</div>
+                </td>
+                <td class="px-4 py-4 text-slate-500 text-xs max-w-[200px] truncate hidden md:table-cell">
+                    ${escapeHtml(j.deskripsi || '—')}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 text-red-600 font-black text-sm">
+                        ${j.poin}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-center text-slate-400 font-medium italic text-xs">
+                    ${j.jumlah_pakai}x
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <div class="flex justify-end gap-2">
+                        <button onclick='editJenis(${JSON.stringify(j)})' 
+                                class="p-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-primary hover:text-white transition-all cursor-pointer" title="Edit">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="deleteJenis(${j.id_jenis},'${escapeHtml(j.nama_jenis)}')" 
+                                class="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-600 hover:text-white transition-all cursor-pointer" title="Hapus">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+            lucide.createIcons();
+        }
+
+        function openModal() {
+            document.getElementById('modal-title').textContent = 'Tambah Jenis';
+            document.getElementById('edit-id').value = '';
+            document.getElementById('f-kategori').value = '';
+            document.getElementById('f-nama').value = '';
+            document.getElementById('f-deskripsi').value = '';
+            document.getElementById('f-poin').value = '';
+
+            const modal = document.getElementById('modal');
+            const container = document.getElementById('modal-container');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        // Helper for edit button to parse object correctly
+        function editJenis(j) {
+            document.getElementById('modal-title').textContent = 'Edit Jenis';
+            document.getElementById('edit-id').value = j.id_jenis;
+            document.getElementById('f-kategori').value = j.kode_kategori || '';
+            document.getElementById('f-nama').value = j.nama_jenis;
+            document.getElementById('f-deskripsi').value = j.deskripsi || '';
+            document.getElementById('f-poin').value = j.poin;
+
+            const modal = document.getElementById('modal');
+            const container = document.getElementById('modal-container');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const container = document.getElementById('modal-container');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        document.getElementById('jenis-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const isEdit = id !== '';
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+
+            const body = {
+                kode_kategori: document.getElementById('f-kategori').value,
+                nama_jenis: document.getElementById('f-nama').value.trim(),
+                deskripsi: document.getElementById('f-deskripsi').value.trim(),
+                poin: parseInt(document.getElementById('f-poin').value) || 0,
+            };
+            if (isEdit) body.id_jenis = parseInt(id);
+
+            const url = isEdit ? '/api/jenis/update' : '/api/jenis/store';
+            const res = await api(url, { method: 'POST', body });
+
+            if (res.ok) {
+                showAlert(isEdit ? 'Berhasil diperbarui!' : 'Berhasil ditambahkan!', 'success');
+                closeModal();
+                loadJenis();
+            } else {
+                showAlert(res.error, 'error');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
+
+        async function deleteJenis(id, nama) {
+            const ok = await confirmAction('Hapus Jenis Pelanggaran', `Hapus "${nama}"? Aksi ini tidak bisa dibatalkan.`);
+            if (!ok) return;
+            const res = await api('/api/jenis/delete', { method: 'POST', body: { id_jenis: id } });
+            if (res.ok) {
+                showAlert('Data berhasil dihapus.', 'success');
+                loadJenis();
+            } else {
+                showAlert(res.error, 'error');
+            }
+        }
+
+        function confirmAction(title, message) {
+            return new Promise(resolve => {
+                const modal = document.getElementById('modal-confirm-jenis');
+                document.getElementById('confirm-jenis-title').textContent = title;
+                document.getElementById('confirm-jenis-msg').textContent = message;
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.querySelector('[data-box]').classList.remove('scale-95', 'opacity-0'), 10);
+                lucide.createIcons();
+                const ok = document.getElementById('confirm-jenis-ok');
+                const cancel = document.getElementById('confirm-jenis-cancel');
+                function cleanup(val) {
+                    modal.querySelector('[data-box]').classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                    ok.removeEventListener('click', onOk);
+                    cancel.removeEventListener('click', onCancel);
+                    resolve(val);
+                }
+                function onOk() { cleanup(true); }
+                function onCancel() { cleanup(false); }
+                ok.addEventListener('click', onOk);
+                cancel.addEventListener('click', onCancel);
+            });
+        }
+    </script>
+</body>
+
+</html>

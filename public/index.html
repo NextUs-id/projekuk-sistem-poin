@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMK TI Bali Global Denpasar — Student Management System</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Poppins', sans-serif;
+            --color-primary: #0F172A;     /* Slate 900 */
+            --color-secondary: #64748B;   /* Slate 500 */
+            --color-accent: #C4F168;      /* Lime */
+            --color-surface: #ffffff;
+        }
+
+        /* Custom Utilities for the Blob */
+        .blob-shape {
+            border-radius: 3rem;
+            transform: rotate(-6deg);
+        }
+        
+        .floating-card {
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15);
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes float-delayed {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .animate-float {
+            animation: float-slow 4s ease-in-out infinite;
+        }
+        
+        .animate-float-delay {
+            animation: float-delayed 5s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-slate-900 overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white/5 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/" class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                    <div class="w-8 h-8 bg-[#C4F168] rounded-lg flex items-center justify-center">
+                        <span class="text-slate-900 text-lg">N</span>
+                    </div>
+                    SMK TI Bali Global Denpasar.
+                </a>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#"
+                        class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Beranda</a>
+                    <a href="#fitur"
+                        class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Fitur</a>
+                    <a href="#akses"
+                        class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Akses</a>
+                </div>
+
+                <!-- CTA -->
+                <a href="/login"
+                    class="px-6 py-2.5 bg-[#0F172A] text-white text-sm font-semibold rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+                    Masuk
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-10 pb-20 lg:pt-20 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+                <!-- Left Column (Content) -->
+                <div class="lg:col-span-6 flex flex-col gap-8 z-10">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit">
+                        <span class="w-2 h-2 rounded-full bg-[#C4F168]"></span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-600">SMK TI Bali Global
+                            Denpasar</span>
+                    </div>
+
+                    <h1
+                        class="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-slate-900">
+                        Kedisiplinan <br>
+                        <span class="relative inline-block">
+                            Digital
+                            <svg class="absolute w-full h-3 -bottom-1 left-0 text-[#C4F168]" viewBox="0 0 100 10"
+                                preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none" />
+                            </svg>
+                        </span>
+                        Siswa.
+                    </h1>
+
+                    <p class="text-lg text-slate-500 max-w-lg leading-relaxed">
+                        Platform pencatatan poin pelanggaran yang transparan, real-time, dan terintegrasi untuk
+                        membangun karakter siswa yang lebih baik.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
+                        <a href="/login"
+                            class="px-8 py-4 bg-[#0F172A] text-white font-semibold rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2">
+                            Mulai Sekarang
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#akses"
+                            class="px-8 py-4 bg-white text-slate-900 border border-slate-200 font-semibold rounded-2xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                            Lihat Akses
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="flex items-center gap-8 mt-4 pt-8 border-t border-slate-100">
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">2K+</p>
+                            <p class="text-sm text-slate-500">Siswa Terdaftar</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">98%</p>
+                            <p class="text-sm text-slate-500">Akurasi Data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Visual Layering) -->
+                <div class="lg:col-span-6 relative h-[600px] w-full flex items-center justify-center lg:justify-end">
+
+                    <!-- Layer 1: Organic Blob -->
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-[#C4F168] blob-shape -z-10">
+                    </div>
+
+                    <!-- Layer 2: Main Image -->
+                    <div
+                        class="relative w-[85%] h-[90%] rounded-3xl overflow-hidden border-4 border-white shadow-2xl rotate-[-3deg] hover:rotate-0 transition-all duration-500">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Student" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Layer 3: Floating Widgets -->
+
+                    <!-- Widget A (Bottom Left) -->
+                    <div
+                        class="absolute bottom-[10%] left-[0%] sm:left-[5%] bg-white p-4 rounded-2xl floating-card animate-float max-w-[200px]">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Status</p>
+                                <p class="text-sm font-bold text-slate-900">Tercatat</p>
+                            </div>
+                        </div>
+                        <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full w-[80%] bg-[#C4F168]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Widget B (Top Right) -->
+                    <div
+                        class="absolute top-[15%] right-[0%] sm:right-[5%] bg-white p-4 rounded-2xl floating-card animate-float-delay z-20">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-red-50 rounded-xl">
+                                <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500 font-medium">Pelanggaran Baru</p>
+                                <p class="text-2xl font-bold text-slate-900">+12</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Widget C (Decoration) -->
+                    <div class="absolute top-[5%] left-[10%] bg-white p-3 rounded-xl shadow-lg rotate-12 z-0">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-[#0F172A]"></i>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Cards Section (Kept but styled) -->
+    <section id="akses" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">Akses Sistem</h2>
+                <p class="text-slate-500 mt-2">Pilih peran untuk masuk ke dashboard</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Admin -->
+                <a href="/login"
+                    class="group bg-white p-8 rounded-3xl border border-slate-100 hover:border-[#C4F168] hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-20 h-20 bg-[#C4F168]/10 rounded-bl-[4rem] transition-all group-hover:scale-150">
+                    </div>
+                    <div
+                        class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#C4F168] transition-colors">
+                        <i data-lucide="shield" class="w-7 h-7 text-slate-700 group-hover:text-slate-900"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Admin</h3>
+                    <p class="text-sm text-slate-500">Kontrol penuh sistem & konfigurasi.</p>
+                </a>
+
+                <!-- BK -->
+                <a href="/login"
+                    class="group bg-white p-8 rounded-3xl border border-slate-100 hover:border-[#C4F168] hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-20 h-20 bg-[#C4F168]/10 rounded-bl-[4rem] transition-all group-hover:scale-150">
+                    </div>
+                    <div
+                        class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#C4F168] transition-colors">
+                        <i data-lucide="file-text" class="w-7 h-7 text-slate-700 group-hover:text-slate-900"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Guru BK</h3>
+                    <p class="text-sm text-slate-500">Manajemen pelanggaran & surat.</p>
+                </a>
+
+                <!-- Guru -->
+                <a href="/login"
+                    class="group bg-white p-8 rounded-3xl border border-slate-100 hover:border-[#C4F168] hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-20 h-20 bg-[#C4F168]/10 rounded-bl-[4rem] transition-all group-hover:scale-150">
+                    </div>
+                    <div
+                        class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#C4F168] transition-colors">
+                        <i data-lucide="user-check" class="w-7 h-7 text-slate-700 group-hover:text-slate-900"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Guru / Wali</h3>
+                    <p class="text-sm text-slate-500">Input pelanggaran kelas.</p>
+                </a>
+
+                <!-- Siswa -->
+                <a href="/login"
+                    class="group bg-white p-8 rounded-3xl border border-slate-100 hover:border-[#C4F168] hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-20 h-20 bg-[#C4F168]/10 rounded-bl-[4rem] transition-all group-hover:scale-150">
+                    </div>
+                    <div
+                        class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#C4F168] transition-colors">
+                        <i data-lucide="graduation-cap" class="w-7 h-7 text-slate-700 group-hover:text-slate-900"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Siswa</h3>
+                    <p class="text-sm text-slate-500">Cek poin & riwayat.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-white text-center border-t border-slate-100">
+        <p class="text-slate-400 text-sm">© 2026 SMK TI Bali Global Denpasar Student Management — SMK TI Bali Global Denpasar</p>
+    </footer>
+
+    <!-- Init Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Perjanjian — SMK TI Bali Global Denpasar</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Poppins', sans-serif;
+            --color-primary: #0F172A;
+            --color-accent: #C4F168;
+            --color-surface: #ffffff;
+            --color-bg: #F8FAFC;
+        }
+
+        .premium-card {
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.12);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-entry {
+            animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F8FAFC] min-h-screen font-sans relative overflow-x-hidden">
+    <!-- Background Blobs -->
+    <div
+        class="fixed -top-[10%] -left-[5%] w-[500px] h-[500px] bg-[#C4F168] rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10">
+    </div>
+    <div class="fixed -bottom-[10%] -right-[5%] w-[400px] h-[400px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10"
+        style="animation-delay: 2s;"></div>
+
+    <!-- Layout wrapper -->
+    <div id="app"></div>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full animate-entry">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-2xl shadow-primary/20">
+                    <i data-lucide="file-signature" class="w-7 h-7 text-accent"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black text-primary tracking-tight">Surat Perjanjian</h1>
+                    <p class="text-slate-500 text-sm font-medium mt-1">Dokumentasi kesepakatan pembinaan perilaku siswa
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 md:p-10 mb-10 premium-card">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-primary"></i>
+                </div>
+                <h3 class="text-xl font-black text-primary tracking-tight uppercase tracking-[0.1em]">Buat Surat Baru
+                </h3>
+            </div>
+
+            <form id="form-perjanjian" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Pilih
+                            Siswa</label>
+                        <div class="relative group">
+                            <i data-lucide="user-search"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <select id="f-siswa" required
+                                class="w-full pl-11 pr-10 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all appearance-none cursor-pointer">
+                                <option value="">— Pilih Siswa —</option>
+                            </select>
+                            <i data-lucide="chevron-down"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Tanggal
+                            Surat</label>
+                        <div class="relative group">
+                            <i data-lucide="calendar"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <input type="date" id="f-tanggal" required
+                                class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Orang Tua / Wali</label>
+                        <div class="relative group">
+                            <i data-lucide="users" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <input type="text" id="f-ortu-nama" placeholder="Nama Lengkap Orang Tua" class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Pekerjaan</label>
+                        <div class="relative group">
+                            <i data-lucide="briefcase" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <input type="text" id="f-ortu-pekerjaan" placeholder="Pekerjaan Orang Tua" class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Alamat Rumah</label>
+                        <div class="relative group">
+                            <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <input type="text" id="f-ortu-alamat" placeholder="Alamat Lengkap" class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">No. HP / Telp</label>
+                        <div class="relative group">
+                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                            <input type="text" id="f-ortu-hp" placeholder="08xxxxxxxxxx" class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Program Keahlian / Masalah</label>
+                    <div class="relative group">
+                        <i data-lucide="message-square"
+                            class="absolute left-4 top-6 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                        <textarea id="f-isi" rows="4" required
+                            class="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all resize-none"
+                            placeholder="Tuliskan Program Keahlian dan rincian masalah/janji siswa..."></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="px-10 py-4 bg-primary text-accent rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/10">
+                        Simpan Dokumen
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden premium-card">
+            <div class="px-8 py-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                <h3 class="text-sm font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                    <i data-lucide="layout-list" class="w-4 h-4 text-slate-400"></i>
+                    Riwayat Surat Perjanjian
+                </h3>
+            </div>
+            <div id="table-container" class="overflow-x-auto min-h-[200px]">
+                <div class="flex flex-col items-center justify-center p-20 gap-3">
+                    <div class="w-10 h-10 border-4 border-accent border-t-primary rounded-full animate-spin"></div>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading
+                        records...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Print Preview Modal -->
+    <div id="print-modal"
+        class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-primary/20 backdrop-blur-md p-4 overflow-y-auto pt-10 transition-all duration-300">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl scale-95 opacity-0 transition-all duration-300 mb-10 overflow-hidden"
+            id="modal-content">
+            <div class="flex items-center justify-between p-8 border-b border-slate-50 bg-slate-50/50">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center">
+                        <i data-lucide="printer" class="w-6 h-6 text-accent"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-primary tracking-tight">Cetak Dokumen</h2>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Format Standar Sekolah
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="doPrint()"
+                        class="px-6 py-3 bg-primary text-accent rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/10">
+                        Cetak
+                    </button>
+                    <button onclick="closePrint()"
+                        class="w-12 h-12 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="print-content" class="p-12 overflow-x-auto">
+                <!-- Content here is for display only, will be styled as formal letter -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        (async () => {
+            const user = await requireLogin();
+            if (!user || !['admin', 'bk'].includes(user.role)) { window.location.href = '/dashboard'; return; }
+            renderLayout(user);
+
+            document.getElementById('f-tanggal').value = new Date().toISOString().slice(0, 10);
+
+            const eligRes = await api('/api/surat/siswa-eligible?min_poin=0');
+            if (eligRes.ok) {
+                const sel = document.getElementById('f-siswa');
+                eligRes.data.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id_siswa;
+                    opt.textContent = `${s.nis} — ${s.nama} (${s.kelas})`;
+                    sel.appendChild(opt);
+                });
+
+                // Auto-populate when student is selected
+                sel.addEventListener('change', async () => {
+                    const id = sel.value;
+                    if (!id) return;
+                    
+                    const res = await api(`/api/siswa/detail?id=${id}`);
+                    if (res.ok && res.siswa) {
+                        const s = res.siswa;
+                        document.getElementById('f-ortu-nama').value = s.nama_orang_tua || '';
+                        document.getElementById('f-ortu-pekerjaan').value = s.pekerjaan_orang_tua || '';
+                        document.getElementById('f-ortu-alamat').value = s.alamat || '';
+                        document.getElementById('f-ortu-hp').value = s.kontak_orang_tua || '';
+                        document.getElementById('f-isi').value = (s.program_keahlian || '') + '\n\n';
+                    }
+                });
+            }
+
+            loadList();
+
+            document.getElementById('form-perjanjian').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.submitter;
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processing...';
+                lucide.createIcons();
+
+                const body = {
+                    id_siswa: parseInt(document.getElementById('f-siswa').value),
+                    tanggal_perjanjian: document.getElementById('f-tanggal').value,
+                    isi_perjanjian: document.getElementById('f-isi').value.trim(),
+                    ortu_nama: document.getElementById('f-ortu-nama').value.trim(),
+                    ortu_pekerjaan: document.getElementById('f-ortu-pekerjaan').value.trim(),
+                    ortu_alamat: document.getElementById('f-ortu-alamat').value.trim(),
+                    ortu_hp: document.getElementById('f-ortu-hp').value.trim(),
+                };
+                if (!body.id_siswa) { showAlert('Pilih siswa.', 'error'); btn.disabled = false; btn.textContent = originalText; return; }
+
+                const res = await api('/api/surat/perjanjian', { method: 'POST', body });
+                btn.disabled = false;
+                btn.textContent = originalText;
+                lucide.createIcons();
+
+                if (res.ok) {
+                    showAlert(res.message, 'success');
+                    document.getElementById('form-perjanjian').reset();
+                    document.getElementById('f-tanggal').value = new Date().toISOString().slice(0, 10);
+                    loadList();
+                } else {
+                    showAlert(res.error, 'error');
+                }
+            });
+        })();
+
+        async function loadList() {
+            const res = await api('/api/surat/perjanjian');
+            const el = document.getElementById('table-container');
+            if (!res.ok || !res.data.length) {
+                el.innerHTML = `
+                    <div class="px-8 py-20 text-center flex flex-col items-center gap-3">
+                        <i data-lucide="database" class="w-12 h-12 text-slate-200"></i>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Belum ada data surat perjanjian.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+            el.innerHTML = `
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="text-left px-8 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Record</th>
+                            <th class="text-left px-8 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Siswa / Kelas</th>
+                            <th class="text-left px-8 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Perjanjian</th>
+                            <th class="text-center px-8 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        ${res.data.map((s, i) => `
+                            <tr class="group hover:bg-slate-50/30 transition-all">
+                                <td class="px-8 py-6 whitespace-nowrap">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400">#${i + 1}</span>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest tabular-nums">${s.tanggal_perjanjian}</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <p class="text-sm font-black text-primary tracking-tight">${escapeHtml(s.nama)}</p>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${escapeHtml(s.kelas)}</p>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <p class="text-xs text-slate-500 font-medium line-clamp-1 max-w-xs" title="${escapeHtml(s.isi_perjanjian)}">
+                                        ${escapeHtml(s.isi_perjanjian)}
+                                    </p>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <div class="flex justify-center">
+                                        <button onclick="openPrint(${s.id_perjanjian})" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm">
+                                            <i data-lucide="printer" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            lucide.createIcons();
+        }
+
+        async function openPrint(id) {
+            const res = await api(`/api/surat/perjanjian/print?id=${id}`);
+            if (!res.ok) { showAlert(res.error, 'error'); return; }
+
+            const s = res.surat;
+            const p = res.pejabat;
+            const kepsek = p['Kepala Sekolah'] || { nama_pejabat: '-', nip: '-' };
+            const bk = p['Guru BK'] || { nama_pejabat: '-', nip: '-' };
+            const kesiswaan = p['Wakasek Kesiswaan'] || { nama_pejabat: '-', nip: '-' };
+
+            // Data handling for multi-line textarea
+            const isiLines = (s.isi_perjanjian || '').split('\n');
+            const progKeahlian = isiLines.length > 0 ? isiLines[0] : '...................................................';
+            const masalahDisplay = isiLines.slice(1).join('\n') || '...................................................';
+
+            document.getElementById('print-content').innerHTML = `
+                <div style="font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.5; color: #000; background: #fff; padding: 0; min-width: 650px;">
+                    <img src="kop-surat.jpg" style="width: 100%; height: auto; margin-bottom: 5px;">
+                    
+                    <div style="text-align: center; font-weight: bold; font-size: 18px; margin: 10px 0 20px 0; text-transform: uppercase;">
+                        SURAT PERNYATAAN SISWA
+                    </div>
+
+                    <p style="margin-bottom: 5px;">Yang bertandatangan di bawah ini :</p>
+                    <table style="width: 100%; margin-left: 20px; border-collapse: collapse;">
+                        <tr><td style="width: 150px; padding-left: 20px;">Nama</td><td>: <strong>${escapeHtml(s.nama)}</strong></td></tr>
+                        <tr><td style="padding-left: 20px;">NIS</td><td>: ${escapeHtml(s.nis)}</td></tr>
+                        <tr><td style="padding-left: 20px;">Kelas</td><td>: ${escapeHtml(s.kelas)}</td></tr>
+                        <tr><td style="padding-left: 20px;">Program Keahlian</td><td>: ${escapeHtml(s.prog_keahlian || progKeahlian)}</td></tr>
+                        <tr>
+                            <td style="padding-left: 20px; vertical-align: top;">Masalah</td>
+                            <td style="vertical-align: top;">: ${escapeHtml(s.ortu_masalah || masalahDisplay).replace(/\n/g, '<br>&nbsp;&nbsp;')}</td>
+                        </tr>
+                    </table>
+
+                    <table style="width: 100%; margin-left: 20px; margin-top: 10px; border-collapse: collapse;">
+                        <tr><td style="width: 150px; padding-left: 20px;">Nama Orang Tua</td><td>: ${escapeHtml(s.ortu_nama || '...................................................') }</td></tr>
+                        <tr><td style="padding-left: 20px;">Pekerjaan</td><td>: ${escapeHtml(s.ortu_pekerjaan || '...................................................') }</td></tr>
+                        <tr><td style="padding-left: 20px;">Alamat Rumah</td><td>: ${escapeHtml(s.ortu_alamat || '...................................................') }</td></tr>
+                        <tr><td style="padding-left: 20px;">No. Hp./Telp.</td><td>: ${escapeHtml(s.ortu_hp || '...................................................') }</td></tr>
+                    </table>
+
+                    <p style="text-align: justify; margin-top: 15px; text-indent: 10px;">
+                        Menyatakan dan berjanji akan bersungguh-sungguh berubah dan bersedia mentaati aturan dan tata tertib sekolah. Apabila selama masa pembinaan tidak mengalami perubahan, maka siswa yang bersangkutan dikembalikan kepada orang tua/wali.
+                    </p>
+                    <p style="text-align: justify; margin-top: 15px; text-indent: 10px;">
+                        Demikian surat pernyataan ini saya buat dengan sesungguhnya tanpa ada tekanan dari siapapun.
+                    </p>
+
+                    <table style="width: 100%; margin-top: 20px;">
+                        <tr>
+                            <td style="width: 50%; vertical-align: bottom;">
+                                Mengetahui,<br>Orang Tua/Wali siswa<br><br><br><br>
+                                .......................................................
+                            </td>
+                            <td style="width: 50%; vertical-align: bottom; padding-left: 50px;">
+                                Denpasar, ${escapeHtml(s.tanggal_perjanjian)}<br>Siswa yang bersangkutan<br><br><br><br>
+                                <strong>${escapeHtml(s.nama)}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%; vertical-align: bottom; padding-top: 20px;">
+                                Guru Bimbingan Konseling<br><br><br><br>
+                                <u>${escapeHtml(bk.nama_pejabat)}</u>
+                            </td>
+                            <td style="width: 50%; vertical-align: bottom; padding-left: 50px; padding-top: 20px;">
+                                Guru Wali Kelas<br><br><br><br>
+                                .......................................................
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        Mengetahui<br>Wakasek Kesiswaan<br><br><br><br>
+                        <u>${escapeHtml(kesiswaan.nama_pejabat)}</u>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('print-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closePrint() {
+            const modal = document.getElementById('print-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function doPrint() {
+            const content = document.getElementById('print-content').innerHTML;
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Cetak Surat Pernyataan</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; padding: 20px; }
+                        @media print { 
+                            body { padding: 0; margin: 10mm; } 
+                            img { max-width: 100%; }
+                        }
+                        table { border-collapse: collapse; }
+                    </style>
+                </head>
+                <body>
+                    <div style="max-width: 210mm; margin: 0 auto;">
+                        ${content}
+                    </div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+            // Wait for image to load before printing
+            const img = win.document.querySelector('img');
+            if (img && !img.complete) {
+                img.onload = () => { win.print(); };
+            } else {
+                win.print();
+            }
+        }
+    </script>
+</body>
+
+</html>

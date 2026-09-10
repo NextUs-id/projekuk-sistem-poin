@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekapitulasi Surat — SiPoin</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Poppins', sans-serif;
+            --color-primary: #0F172A;
+            --color-accent: #C4F168;
+            --color-surface: #ffffff;
+            --color-bg: #F8FAFC;
+        }
+        .premium-card {
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.12);
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-entry {
+            animation: slideUpFade 0.5s ease-out forwards;
+        }
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] min-h-screen font-sans relative overflow-x-hidden">
+    <!-- Background Blobs -->
+    <div class="fixed -top-[10%] -left-[5%] w-[500px] h-[500px] bg-[#C4F168] rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10"></div>
+    <div class="fixed -bottom-[10%] -right-[5%] w-[400px] h-[400px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-20 animate-blob -z-10" style="animation-delay: 2s;"></div>
+
+    <div id="app"></div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full animate-entry">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-2xl shadow-primary/20">
+                    <i data-lucide="file-stack" class="w-7 h-7 text-accent"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black text-primary tracking-tight">Rekapitulasi Surat</h1>
+                    <p class="text-slate-500 text-sm font-medium mt-1">Ringkasan dan statistik semua surat BK</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="exportTable()" class="px-5 py-3 bg-white border border-slate-200 text-primary rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4"></i> Export
+                </button>
+                <button onclick="printReport()" class="px-5 py-3 bg-primary text-accent rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/10 flex items-center gap-2">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div id="summary-cards" class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+            <!-- Loading skeleton -->
+            <div class="bg-white rounded-3xl border border-slate-50 p-5 animate-pulse">
+                <div class="h-10 w-10 bg-slate-100 rounded-xl mb-3"></div>
+                <div class="h-2.5 w-16 bg-slate-100 rounded mb-1.5"></div>
+                <div class="h-6 w-10 bg-slate-100 rounded"></div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 mb-10 premium-card">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                    <i data-lucide="filter" class="w-5 h-5 text-primary"></i>
+                </div>
+                <h3 class="text-lg font-black text-primary tracking-tight uppercase tracking-[0.1em]">Filter Data</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Tanggal Mulai</label>
+                    <input type="date" id="f-tanggal-mulai"
+                        class="w-full px-4 py-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Tanggal Selesai</label>
+                    <input type="date" id="f-tanggal-selesai"
+                        class="w-full px-4 py-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Kelas</label>
+                    <select id="f-kelas" class="w-full px-4 py-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all appearance-none cursor-pointer">
+                        <option value="all">Semua Kelas</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Jenis Surat</label>
+                    <select id="f-jenis-surat" class="w-full px-4 py-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 text-sm font-bold text-primary focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all appearance-none cursor-pointer">
+                        <option value="all">Semua Jenis</option>
+                        <option value="pemanggilan_ortu">Surat Pemanggilan</option>
+                        <option value="perjanjian_siswa">Surat Perjanjian Siswa</option>
+                        <option value="do">Surat DO</option>
+                        <option value="pindah">Surat Pindah</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">&nbsp;</label>
+                    <button onclick="applyFilters()" class="w-full px-4 py-3.5 bg-primary text-accent rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/10 flex items-center justify-center gap-2">
+                        <i data-lucide="search" class="w-4 h-4"></i> Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-10">
+            <!-- By Jenis Chart -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 premium-card">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">
+                        <i data-lucide="tag" class="w-5 h-5 text-violet-600"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-primary tracking-tight uppercase tracking-[0.1em]">per Jenis</h3>
+                </div>
+                <div id="chart-by-jenis" class="space-y-4 min-h-[200px]">
+                    <!-- Bars rendered by JS -->
+                </div>
+            </div>
+
+            <!-- By Class Chart -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 premium-card">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-primary tracking-tight uppercase tracking-[0.1em]">per Kelas</h3>
+                </div>
+                <div id="chart-by-class" class="space-y-4 min-h-[200px]">
+                    <!-- Bars rendered by JS -->
+                </div>
+            </div>
+
+            <!-- By Month Chart -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 premium-card">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                        <i data-lucide="calendar" class="w-5 h-5 text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-primary tracking-tight uppercase tracking-[0.1em]">per Bulan</h3>
+                </div>
+                <div id="chart-by-month" class="space-y-4 min-h-[200px]">
+                    <!-- Bars rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden premium-card">
+            <div class="px-8 py-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                <h3 class="text-sm font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                    <i data-lucide="table-2" class="w-4 h-4 text-slate-400"></i>
+                    Daftar Surat
+                </h3>
+                <span id="table-count" class="text-[10px] font-black text-slate-400 uppercase tracking-widest"></span>
+            </div>
+            <div id="table-container" class="overflow-x-auto min-h-[200px]">
+                <!-- Table rendered by JS -->
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/app.js"></script>
+    <script>
+        // State
+        let currentFilters = {
+            tanggal_mulai: null,
+            tanggal_selesai: null,
+            kelas: 'all',
+            jenis_surat: 'all'
+        };
+        let rawData = [];
+        let summaryData = {};
+
+        const JENIS_LABELS = {
+            'pemanggilan_ortu': { label: 'Pemanggilan', color: 'bg-blue-50 text-blue-600', badge: 'bg-blue-100 text-blue-700' },
+            'perjanjian_siswa': { label: 'Perjanjian Siswa', color: 'bg-amber-50 text-amber-600', badge: 'bg-amber-100 text-amber-700' },
+            'perjanjian_ortu': { label: 'Perjanjian Ortu', color: 'bg-orange-50 text-orange-600', badge: 'bg-orange-100 text-orange-700' },
+            'do': { label: 'Surat DO', color: 'bg-rose-50 text-rose-600', badge: 'bg-rose-100 text-rose-700' },
+            'pindah': { label: 'Surat Pindah', color: 'bg-purple-50 text-purple-600', badge: 'bg-purple-100 text-purple-700' },
+        };
+
+        // Init
+        (async () => {
+            const user = await requireLogin();
+            if (!user || !['admin', 'bk'].includes(user.role)) {
+                window.location.href = '/dashboard';
+                return;
+            }
+            renderLayout(user);
+            await loadData();
+        })();
+
+        async function loadData() {
+            const params = new URLSearchParams();
+            if (currentFilters.tanggal_mulai) params.append('tanggal_mulai', currentFilters.tanggal_mulai);
+            if (currentFilters.tanggal_selesai) params.append('tanggal_selesai', currentFilters.tanggal_selesai);
+            if (currentFilters.kelas !== 'all') params.append('kelas', currentFilters.kelas);
+            if (currentFilters.jenis_surat !== 'all') params.append('jenis_surat', currentFilters.jenis_surat);
+
+            const res = await api('/api/surat/rekap?' + params.toString());
+
+            if (!res.ok) {
+                showAlert('Gagal memuat data: ' + (res.error || 'Unknown error'), 'error');
+                return;
+            }
+
+            rawData = res.data || [];
+            summaryData = res.summary || {};
+            renderSummaryCards();
+            renderKelasFilter(res.filters.kelas_list);
+            renderByJenisChart(summaryData.by_jenis || {});
+            renderByClassChart(summaryData.by_class || {});
+            renderByMonthChart(summaryData.by_month || []);
+            renderTable();
+        }
+
+        function renderSummaryCards() {
+            const cards = document.getElementById('summary-cards');
+            const counts = summaryData.counts_per_type || {};
+            const total = summaryData.total || 0;
+            const byClass = summaryData.by_class || {};
+            const byMonth = summaryData.by_month || [];
+            const avgPerMonth = byMonth.length > 0 ? Math.round(total / byMonth.length) : 0;
+
+            cards.innerHTML = `
+                <!-- Total -->
+                <div class="bg-white rounded-3xl border border-slate-50 p-5 premium-card group overflow-hidden relative">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-slate-100 rounded-full blur-xl group-hover:scale-125 transition-transform"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center mb-3">
+                            <i data-lucide="file-stack" class="w-5 h-5 text-slate-600"></i>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total</p>
+                        <p class="text-2xl font-black text-primary tracking-tighter tabular-nums">${total}</p>
+                    </div>
+                </div>
+                <!-- Pemanggilan -->
+                <div class="bg-white rounded-3xl border border-slate-50 p-5 premium-card group overflow-hidden relative cursor-pointer ${currentFilters.jenis_surat === 'pemanggilan_ortu' ? 'ring-2 ring-blue-400' : ''}" onclick="setJenisFilter('pemanggilan_ortu')">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-blue-50 rounded-full blur-xl group-hover:scale-125 transition-transform"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
+                            <i data-lucide="mail-open" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pemanggilan</p>
+                        <p class="text-2xl font-black text-primary tracking-tighter tabular-nums">${counts.pemanggilan_ortu || 0}</p>
+                    </div>
+                </div>
+                <!-- Perjanjian -->
+                <div class="bg-white rounded-3xl border border-slate-50 p-5 premium-card group overflow-hidden relative cursor-pointer ${currentFilters.jenis_surat === 'perjanjian_siswa' ? 'ring-2 ring-amber-400' : ''}" onclick="setJenisFilter('perjanjian_siswa')">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-amber-50 rounded-full blur-xl group-hover:scale-125 transition-transform"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center mb-3">
+                            <i data-lucide="handshake" class="w-5 h-5 text-amber-600"></i>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Perjanjian</p>
+                        <p class="text-2xl font-black text-primary tracking-tighter tabular-nims">${counts.perjanjian_siswa || 0}</p>
+                    </div>
+                </div>
+                <!-- DO -->
+                <div class="bg-white rounded-3xl border border-slate-50 p-5 premium-card group overflow-hidden relative cursor-pointer ${currentFilters.jenis_surat === 'do' ? 'ring-2 ring-rose-400' : ''}" onclick="setJenisFilter('do')">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-rose-50 rounded-full blur-xl group-hover:scale-125 transition-transform"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center mb-3">
+                            <i data-lucide="alert-octagon" class="w-5 h-5 text-rose-600"></i>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Surat DO</p>
+                        <p class="text-2xl font-black text-primary tracking-tighter tabular-nums">${counts.do || 0}</p>
+                    </div>
+                </div>
+                <!-- Pindah -->
+                <div class="bg-white rounded-3xl border border-slate-50 p-5 premium-card group overflow-hidden relative cursor-pointer ${currentFilters.jenis_surat === 'pindah' ? 'ring-2 ring-purple-400' : ''}" onclick="setJenisFilter('pindah')">
+                    <div class="absolute -right-3 -top-3 w-16 h-16 bg-purple-50 rounded-full blur-xl group-hover:scale-125 transition-transform"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mb-3">
+                            <i data-lucide="log-out" class="w-5 h-5 text-purple-600"></i>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Surat Pindah</p>
+                        <p class="text-2xl font-black text-primary tracking-tighter tabular-nims">${counts.pindah || 0}</p>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function setJenisFilter(jenis) {
+            document.getElementById('f-jenis-surat').value = jenis;
+            currentFilters.jenis_surat = jenis;
+            loadData();
+        }
+
+        function renderKelasFilter(kelasList) {
+            const select = document.getElementById('f-kelas');
+            const currentVal = currentFilters.kelas;
+            select.innerHTML = '<option value="all">Semua Kelas</option>';
+            (kelasList || []).forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = k;
+                if (k === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderByJenisChart(byJenis) {
+            const container = document.getElementById('chart-by-jenis');
+            const entries = Object.entries(JENIS_LABELS).filter(([k]) => byJenis[k] > 0 || currentFilters.jenis_surat === 'all');
+            const maxVal = Math.max(...Object.values(byJenis || {}), 1);
+
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 gap-3 opacity-40">
+                        <i data-lucide="tag" class="w-10 h-10 text-slate-200"></i>
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">No data</span>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = entries.map(([key, info]) => {
+                const count = byJenis[key] || 0;
+                const pct = (count / maxVal * 100).toFixed(1);
+                const colors = {
+                    'pemanggilan_ortu': 'from-blue-500 to-blue-400',
+                    'perjanjian_siswa': 'from-amber-500 to-amber-400',
+                    'do': 'from-rose-500 to-rose-400',
+                    'pindah': 'from-purple-500 to-purple-400',
+                };
+                return `
+                    <div class="group">
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="font-bold text-primary tracking-tight">${info.label}</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${count}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
+                            <div class="bg-gradient-to-r ${colors[key] || 'from-slate-500 to-slate-400'} h-full rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2" style="width: 0%" data-width="${pct}%"></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            setTimeout(() => {
+                container.querySelectorAll('[data-width]').forEach(bar => {
+                    bar.style.width = bar.dataset.width;
+                });
+            }, 100);
+            lucide.createIcons();
+        }
+
+        function renderByClassChart(byClass) {
+            const container = document.getElementById('chart-by-class');
+            const entries = Object.entries(byClass || {});
+
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 gap-3 opacity-40">
+                        <i data-lucide="bar-chart-2" class="w-10 h-10 text-slate-200"></i>
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">No data</span>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const maxVal = Math.max(...entries.map(([, v]) => v), 1);
+
+            container.innerHTML = entries.slice(0, 8).map(([kelas, count]) => {
+                const pct = (count / maxVal * 100).toFixed(1);
+                return `
+                    <div class="group">
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="font-bold text-primary tracking-tight">${escapeHtml(kelas)}</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${count}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-500 to-indigo-400 h-full rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2" style="width: 0%" data-width="${pct}%"></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            setTimeout(() => {
+                container.querySelectorAll('[data-width]').forEach(bar => {
+                    bar.style.width = bar.dataset.width;
+                });
+            }, 100);
+            lucide.createIcons();
+        }
+
+        function renderByMonthChart(byMonth) {
+            const container = document.getElementById('chart-by-month');
+            const entries = (byMonth || []).slice(0, 6);
+
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 gap-3 opacity-40">
+                        <i data-lucide="calendar" class="w-10 h-10 text-slate-200"></i>
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">No data</span>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const maxVal = Math.max(...entries.map(e => e.jumlah), 1);
+            const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+            container.innerHTML = entries.map(({bulan, jumlah}) => {
+                const [year, month] = bulan.split('-');
+                const pct = (jumlah / maxVal * 100).toFixed(1);
+                return `
+                    <div class="group">
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="font-bold text-primary tracking-tight">${monthNames[parseInt(month)]} ${year}</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${jumlah}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-full rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2" style="width: 0%" data-width="${pct}%"></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            setTimeout(() => {
+                container.querySelectorAll('[data-width]').forEach(bar => {
+                    bar.style.width = bar.dataset.width;
+                });
+            }, 100);
+            lucide.createIcons();
+        }
+
+        function renderTable() {
+            const container = document.getElementById('table-container');
+            const countEl = document.getElementById('table-count');
+            countEl.textContent = `${rawData.length} record`;
+
+            if (rawData.length === 0) {
+                container.innerHTML = `
+                    <div class="px-8 py-20 text-center flex flex-col items-center gap-3">
+                        <i data-lucide="inbox" class="w-12 h-12 text-slate-200"></i>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Belum ada data surat.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">#</th>
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Jenis Surat</th>
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Siswa / Kelas</th>
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Tanggal</th>
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Tahap</th>
+                            <th class="text-left px-6 py-4 font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        ${rawData.map((s, i) => {
+                            const jenisInfo = JENIS_LABELS[s.jenis] || { label: s.jenis, badge: 'bg-slate-100 text-slate-600' };
+                            let detail = '';
+                            if (s.jenis === 'pemanggilan_ortu') {
+                                detail = escapeHtml(s.nomor || '-') + (s.detail ? ' — ' + escapeHtml(s.detail) : '');
+                            } else if (s.jenis === 'perjanjian_siswa') {
+                                detail = escapeHtml(s.detail || '-');
+                            } else if (s.jenis === 'do') {
+                                detail = escapeHtml(s.detail || '-');
+                            } else if (s.jenis === 'pindah') {
+                                detail = escapeHtml(s.detail || '-');
+                            }
+                            return `
+                                <tr class="hover:bg-slate-50/30 transition-all">
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400">${i + 1}</span>
+                                    </td>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase ${jenisInfo.badge}">${jenisInfo.label}</span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="text-sm font-black text-primary tracking-tight">${escapeHtml(s.nama)}</p>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${escapeHtml(s.kelas)}</p>
+                                        <p class="text-[9px] font-bold text-slate-400">NIS: ${escapeHtml(s.nis)}</p>
+                                    </td>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${s.tanggal}</span>
+                                    </td>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        ${s.tahap ? `<span class="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase ${
+                                            s.tahap === 'hijau-kuning' ? 'bg-emerald-50 text-emerald-600' :
+                                            s.tahap === 'kuning-merah' ? 'bg-amber-50 text-amber-600' :
+                                            'bg-rose-50 text-rose-600'
+                                        }">${s.tahap}</span>` : '<span class="text-slate-300 text-xs">-</span>'}
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="text-xs text-slate-500 font-medium line-clamp-2 max-w-xs" title="${detail}">${detail}</p>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>`;
+            lucide.createIcons();
+        }
+
+        function applyFilters() {
+            currentFilters.tanggal_mulai = document.getElementById('f-tanggal-mulai').value || null;
+            currentFilters.tanggal_selesai = document.getElementById('f-tanggal-selesai').value || null;
+            currentFilters.kelas = document.getElementById('f-kelas').value || 'all';
+            currentFilters.jenis_surat = document.getElementById('f-jenis-surat').value || 'all';
+            loadData();
+        }
+
+        function printReport() {
+            const printContent = document.getElementById('table-container').innerHTML;
+            const filterInfo = `Jenis: ${currentFilters.jenis_surat === 'all' ? 'Semua' : (JENIS_LABELS[currentFilters.jenis_surat]?.label || currentFilters.jenis_surat)} | Kelas: ${currentFilters.kelas === 'all' ? 'Semua' : currentFilters.kelas} | ${currentFilters.tanggal_mulai || '-'} s/d ${currentFilters.tanggal_selesai || '-'}`;
+
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Rekapitulasi Surat — SiPoin</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; padding: 20px; font-size: 12px; }
+                        h1 { text-align: center; font-size: 18px; margin-bottom: 5px; }
+                        h2 { text-align: center; font-size: 14px; font-weight: normal; margin-bottom: 5px; color: #666; }
+                        p.subtitle { text-align: center; color: #666; font-size: 11px; margin-bottom: 20px; }
+                        hr { border: none; border-top: 1px solid #ddd; margin: 15px 0; }
+                        .meta { font-size: 10px; color: #666; margin-bottom: 15px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                        th, td { border: 1px solid #ddd; padding: 5px 7px; text-align: left; font-size: 10px; }
+                        th { background: #f5f5f5; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Rekapitulasi Surat</h1>
+                    <h2>SMK TI Bali Global Denpasar</h2>
+                    <p class="subtitle">${filterInfo}</p>
+                    <hr>
+                    <div class="meta">Dicetak pada: ${new Date().toLocaleString('id-ID')}</div>
+                    <hr>
+                    ${printContent}
+                </body>
+                </html>`);
+            win.document.close();
+            setTimeout(() => win.print(), 250);
+        }
+
+        function exportTable() {
+            const headers = ['No', 'Jenis Surat', 'Nama', 'NIS', 'Kelas', 'Tanggal', 'Tahap', 'Detail'];
+            const rows = rawData.map((s, i) => {
+                const jenisLabel = JENIS_LABELS[s.jenis]?.label || s.jenis || '-';
+                let detail = '';
+                if (s.jenis === 'pemanggilan_ortu') detail = (s.nomor || '') + (s.detail ? ' — ' + (s.detail || '') : '');
+                else if (s.jenis === 'perjanjian_siswa') detail = s.detail || '';
+                else if (s.jenis === 'do') detail = s.detail || '';
+                else if (s.jenis === 'pindah') detail = s.detail || '';
+                return [
+                    i + 1,
+                    jenisLabel,
+                    s.nama || '',
+                    s.nis || '',
+                    s.kelas || '',
+                    s.tanggal || '',
+                    s.tahap || '-',
+                    detail.replace(/"/g, '""')
+                ];
+            });
+
+            let csv = headers.map(h => `"${h}"`).join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `rekapitulasi-surat-${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

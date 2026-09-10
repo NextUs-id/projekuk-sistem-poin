@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swp
+
+# Env / secrets
+.env
+.env.*
+
+# PHP
+vendor/
+*.log
+*.cache
+
+# Uploads (surat hasil upload, jangan commit)
+public/uploads/
+uploads/
+api/uploads/
+
+# Temp
+*.tmp
+*.bak
